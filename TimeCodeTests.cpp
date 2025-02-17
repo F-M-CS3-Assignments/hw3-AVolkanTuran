@@ -19,7 +19,7 @@ void TestComponentsToSeconds(){
 	assert(t==0);
 
 	t = TimeCode::ComponentsToSeconds(900000,0,0);
-	assert(t=3240000000);
+	assert(t==3240000000);
 	
 	cout << "PASSED!" << endl << endl;
 }
