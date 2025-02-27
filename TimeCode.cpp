@@ -1,6 +1,8 @@
 //Author: Ahmet Volkan Turan
 //Date: 14 February 2025
 
+//I have read the notes.
+
 #include <iostream> //enables cout/cin
 #include <string> //enables string methods
 #include "TimeCode.h" //includes the method declarations
@@ -9,9 +11,6 @@ using namespace std;
 
 //Constructs a TimeCode Object by converting the components into seconds
 TimeCode::TimeCode(unsigned int hr, unsigned int min, long long unsigned int sec){
-    if(hr < 0 || min < 0 || sec < 0){
-        throw invalid_argument("Invalid input. Everything should be nonnegative.");
-    }    
     t = ComponentsToSeconds(hr, min, sec);
 }
 
@@ -52,15 +51,12 @@ void TimeCode::SetSeconds(unsigned int seconds){
 
 //Returns the number of hours
 unsigned int TimeCode::GetHours() const{
-    unsigned int tOnlyHours=t-GetMinutes()*60-GetSeconds();
-    return tOnlyHours/3600;
+    return t/3600;
 }
 
 //Returns the number of minutes
 unsigned int TimeCode::GetMinutes() const{
-    unsigned int tWithoutSec = t-GetSeconds();
-    unsigned int tWithoutSecInMins = tWithoutSec/60;
-    return tWithoutSecInMins%60;
+    return (t/60)%60;
 }
 
 //Returns the number of seconds
@@ -109,10 +105,7 @@ TimeCode TimeCode::operator*(double a) const{
         throw invalid_argument("Can't multiply by a negative number.");
     }
     long long unsigned int newt = static_cast<int>(GetTimeCodeAsSeconds()*a);
-    unsigned int sec = newt%60;
-    unsigned int min = ((newt-sec)/60)%60;
-    unsigned int hr = (newt-min*60-sec)/3600;
-    TimeCode tc = TimeCode(hr, min, sec);
+    TimeCode tc = TimeCode(newt/3600, (newt/60)%60, newt%60);
     return tc;
 }
 
@@ -125,10 +118,7 @@ TimeCode TimeCode::operator/(double a) const{
         throw invalid_argument("Can't divide by 0");
     }
     long long unsigned int newt = static_cast<int>(GetTimeCodeAsSeconds()/a);
-    unsigned int sec = newt%60;
-    unsigned int min = ((newt-sec)/60)%60;
-    unsigned int hr = (newt-min*60-sec)/3600;
-    TimeCode tc = TimeCode(hr, min, sec);
+    TimeCode tc = TimeCode(newt/3600, (newt/60)%60, newt%60);
     return tc;
 }
 
