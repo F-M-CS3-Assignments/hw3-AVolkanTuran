@@ -95,7 +95,7 @@ int main(){
 	string choice;
 	string indent = "        ";
 	double radius;
-	vector<DryingSnapShot*> batches;
+	vector<DryingSnapShot> batches;
 
 	do{
 		cout << "Choose an option: (A)dd, (V)iew Current Items, (Q)uit: " << flush;
@@ -103,19 +103,16 @@ int main(){
 		if(choice == "a" || choice == "A"){
 			cout << indent << "radius: " << flush;
 			cin >> radius;
-			DryingSnapShot* dss = new DryingSnapShot;
-			dss->name = "Batch-" + to_string(rand());
-			dss->startTime = time(0);
-			dss->timeToDry = compute_time_code(get_sphere_sa(radius));
+			DryingSnapShot dss{"Batch-" + to_string(rand()), time(0), compute_time_code(get_sphere_sa(radius))};
 			batches.push_back(dss);
-			cout << indent << drying_snap_shot_to_string(*dss) << endl;
+			cout << indent << drying_snap_shot_to_string(dss) << endl;
+			delete dss.timeToDry;
 		}
 		else if(choice == "v" || choice == "V"){
 			int tracking = batches.size();
-			for(int i = 0; i<batches.size(); i++){
-				cout << indent << drying_snap_shot_to_string(*batches.at(i)) << endl;
-				if(get_time_remaining(*batches.at(i))<=0){
-					delete batches.at(i);
+			for(unsigned int i = 0; i<batches.size(); i++){
+				cout << indent << drying_snap_shot_to_string(batches.at(i)) << endl;
+				if(get_time_remaining(batches.at(i))<=0){
 					batches.erase(batches.begin() + i);
 					i--;
 				}

@@ -32,7 +32,7 @@ TimeCode parse_line(string str){
     if(lineElements.size()<2){
         return -1;
     }
-    int colonIndex = lineElements.at(1).find(':');
+    unsigned int colonIndex = lineElements.at(1).find(':');
     if(colonIndex != string::npos){
         string hrStr = lineElements.at(1).substr(colonIndex-2,2);
         string minStr = lineElements.at(1).substr(colonIndex+1,2);
@@ -41,7 +41,7 @@ TimeCode parse_line(string str){
             int min = stoi(minStr);
             tc = TimeCode(hr, min, 0);
         } 
-        catch(exception e){
+        catch(const exception& e){
             return -1;
         }
     }
@@ -83,7 +83,7 @@ int main(){
     inFS.close();
 
     TimeCode sum;
-    for(int i = 0; i<times.size(); i++){
+    for(unsigned int i = 0; i<times.size(); i++){
         sum = sum + times.at(i);
     }
     TimeCode average = sum/dataPoints;
