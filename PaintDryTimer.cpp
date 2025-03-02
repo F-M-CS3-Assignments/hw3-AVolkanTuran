@@ -24,13 +24,13 @@ struct DryingSnapShot {
 	TimeCode *timeToDry;
 };
 
-
+//Finds the difference between the total time to try and the time that has passed ever since the dss has been added.
 long long int get_time_remaining(DryingSnapShot dss){
 	// Replace with your code
 	return dss.timeToDry->GetTimeCodeAsSeconds() - (time(0) - dss.startTime);
 }
 
-
+//String representation of dss
 string drying_snap_shot_to_string(DryingSnapShot dss){
 	// Replace with your code
 	string output;
@@ -49,7 +49,7 @@ double get_sphere_sa(double rad){
 	return 4*M_PI*rad*rad;
 }
 
-
+//Creates a TimeCode pointer with surfaceArea as the seconds
 TimeCode *compute_time_code(double surfaceArea){
 	// replace with your code
 	TimeCode *tc = new TimeCode(0,0, surfaceArea);
@@ -67,12 +67,29 @@ void tests(){
 	assert(ans > 6 && ans < 8);
 	// add more tests here
 
+	dss.startTime = time(0);
+	tc = TimeCode(0,0,10000);
+	dss.timeToDry = &tc;
+	ans = get_time_remaining(dss);
+	assert(ans>9999 && ans < 10001);
+
+	dss.startTime = time(0);
+	tc = TimeCode(1,0,0);
+	dss.timeToDry = &tc;
+	ans = get_time_remaining(dss);
+	assert(ans>3599 && ans < 3601);
+
 
 	// get_sphere_sa
 	double sa = get_sphere_sa(2.0);
 	assert (50.2654 < sa && sa < 50.2655);
 	// add more tests here
 
+	sa = get_sphere_sa(39.1);
+	assert(19211.5930 < sa && sa < 19211.5931);
+
+	sa = get_sphere_sa(57.49);
+	assert(41533.1127 < sa && sa < 41533.1128);
 
 	// compute_time_code
 	TimeCode *tc2 = compute_time_code(1.0);
@@ -82,7 +99,14 @@ void tests(){
 
 
 	// add more tests here
+	TimeCode *tc3 = compute_time_code(98000);
+	assert(tc3->GetTimeCodeAsSeconds() == 98000);
+	delete tc3;
 
+	TimeCode *tc4 = compute_time_code(342.5);
+	assert(tc4->GetTimeCodeAsSeconds() == 342);
+
+	delete tc4;
 
 	cout << "ALL TESTS PASSED!" << endl;
 
@@ -103,7 +127,10 @@ int main(){
 		if(choice == "a" || choice == "A"){
 			cout << indent << "radius: " << flush;
 			cin >> radius;
-			DryingSnapShot dss{"Batch-" + to_string(rand()), time(0), compute_time_code(get_sphere_sa(radius))};
+			DryingSnapShot dss;
+			dss.name = "Batch-" + to_string(rand());
+			dss.startTime = time(0);
+			dss.timeToDry = compute_time_code(get_sphere_sa(radius));
 			batches.push_back(dss);
 			cout << indent << drying_snap_shot_to_string(dss) << endl;
 			delete dss.timeToDry;

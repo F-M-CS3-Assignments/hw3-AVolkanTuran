@@ -32,7 +32,7 @@ TimeCode parse_line(string str){
     if(lineElements.size()<2){
         return -1;
     }
-    unsigned int colonIndex = lineElements.at(1).find(':');
+    size_t colonIndex = lineElements.at(1).find(':');
     if(colonIndex != string::npos){
         string hrStr = lineElements.at(1).substr(colonIndex-2,2);
         string minStr = lineElements.at(1).substr(colonIndex+1,2);
