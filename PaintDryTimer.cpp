@@ -116,6 +116,7 @@ void tests(){
 int main(){
 	// replace with your code
 	tests();
+	DryingSnapShot dss;
 	string choice;
 	string indent = "        ";
 	double radius;
@@ -127,19 +128,18 @@ int main(){
 		if(choice == "a" || choice == "A"){
 			cout << indent << "radius: " << flush;
 			cin >> radius;
-			DryingSnapShot dss;
 			dss.name = "Batch-" + to_string(rand());
 			dss.startTime = time(0);
 			dss.timeToDry = compute_time_code(get_sphere_sa(radius));
 			batches.push_back(dss);
-			cout << indent << drying_snap_shot_to_string(dss) << endl;
-			delete dss.timeToDry;
+			cout << indent << drying_snap_shot_to_string(dss) << endl;	
 		}
 		else if(choice == "v" || choice == "V"){
 			int tracking = batches.size();
 			for(unsigned int i = 0; i<batches.size(); i++){
 				cout << indent << drying_snap_shot_to_string(batches.at(i)) << endl;
 				if(get_time_remaining(batches.at(i))<=0){
+					delete batches.at(i).timeToDry;
 					batches.erase(batches.begin() + i);
 					i--;
 				}
@@ -148,6 +148,10 @@ int main(){
 		}
 	}
 	while(choice != "q" && choice != "Q");
+
+	for(unsigned int i = 0; i<batches.size(); i++){
+		delete batches.at(i).timeToDry;
+	}
 
 	return 0;
 }
